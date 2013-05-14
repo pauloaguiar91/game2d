@@ -26,8 +26,9 @@ display.setStatusBar(display.HiddenStatusBar)
 --require all libraries
 storyboard = require "storyboard"
 widget = require "widget"
-preference = require "lib.preference"
 json = require "json"
+preference = require "lib.preference"
+mte = require "lib.mte"
 
 _G.allClasses = 
 	{
@@ -57,6 +58,12 @@ if not userData then
 	preference.save{user_data = initializationTable}
 end 
 
+local gameState = preference.getValue("game_state")
+if not gameState then 
+	local initializationTable = {}
+	preference.save{game_state = initializationTable}
+end 
+
 
 	
 	
@@ -65,7 +72,7 @@ end
 	
 --storyboard is the controller for difference scenes 
 --it automatically changes scenes, taking care of the objects in each scene
-storyboard.gotoScene("scene.mainmenu",{effect="crossFade",time=500,})
+storyboard.gotoScene("scene.introscene",{effect="crossFade",time=500,})
 if true then return end 
 
 

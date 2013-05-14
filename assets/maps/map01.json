@@ -79,7 +79,7 @@
  "tilesets":[
         {
          "firstgid":1,
-         "image":"tiles.png",
+         "image":"assets/tilesets/tiles.png",
          "imageheight":544,
          "imagewidth":1020,
          "margin":1,

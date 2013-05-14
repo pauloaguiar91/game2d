@@ -9,7 +9,7 @@ local scene = storyboard.newScene()
 function scene:createScene( event )
 	local group = self.view
 	
-	local background = display.newImage(group ,"img/example.png", 0, 0,display.contentWidth,display.contentHeight)
+	local background = display.newImage(group ,"assets/introscene/example.png", 0, 0,display.contentWidth,display.contentHeight)
 
 	local studioName = display.newText(group ,"Paulo Aguiar Presents", 0, 50, native.systemFont, 40)
 	studioName:setTextColor(0,0,0)
@@ -31,7 +31,7 @@ function scene:enterScene( event )
 		storyboard.gotoScene("scene.mainmenu",options)
 	end 
 	
-	timer.performWithDelay( 1, gotoNextScene,1)
+	timer.performWithDelay( 1000, gotoNextScene,1)
 end
  
  

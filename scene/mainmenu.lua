@@ -101,8 +101,10 @@ function scene:createScene( event )
 		local userData = preference.getValue("user_data")
 		
 		--we are checking whether user's name and gender are already stored
+		local sceneName = "scene.gamescene"
 		if userData.name and userData.gender then
-			storyboard.gotoScene("scene.gamescene")
+			storyboard.purgeScene(sceneName)
+			storyboard.gotoScene(sceneName)
 		else 
 			getUserData()
 		end 
@@ -110,7 +112,16 @@ function scene:createScene( event )
 	
 	
 	local function onContinueGame()
-		storyboard.gotoScene("scene.gamescene")
+		local options =
+			{
+				effect = "fade",
+				time = 400,
+				params =
+				{
+				continueGame=true,
+				}
+			}
+		storyboard.gotoScene("scene.gamescene",options)
 	end 
 	
 	

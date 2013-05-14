@@ -3,6 +3,7 @@
 local allClasses = allClasses
 local allGlobals = allGlobals
 
+local mte = mte
 local display = display 
 local widget = widget 
 local storyboard = storyboard
@@ -15,31 +16,54 @@ local screenH = allGlobals.screenH
 local sW = allGlobals.sW 
 local sH = allGlobals.sH 
 
+local gameLoop
+local atlas = {}
+				--x		y	rot
+atlas["left"] 	= { -1,  0,	90}
+atlas["right"]  = {  1,  0,	-90 }
+atlas["up"]     = {  0, -1,	180 }
+atlas["down"]   = {  0,  1,	0 }
+
+
+function deepcopy(object)
+    local lookup_table = {}
+    local function
+	_copy(object)
+        if type(object) ~= "table" then
+            return object
+        elseif lookup_table[object] then
+            return lookup_table[object]
+        end
+        local new_table = {}
+        lookup_table[object] = new_table
+        for index, value in pairs(object) do
+            new_table[_copy(index)] = _copy(value)
+        end
+        return setmetatable(new_table, _copy( getmetatable(object)))
+    end
+    return _copy(object)
+end
+
+
+
 local scene = storyboard.newScene()
 
 function scene:createScene( event )
 	local group = self.view
 	
 	
+	--Create Map
+	--and insert the map into our group 
+	mte.loadMap("assets/maps/map01")
+	group:insert(mte.getMapObj())
+	mte.goto(
+		{
+		locX=3,locY=3, 
+		blockScale = 32
+		})
+
+
 	
-	
-	local userData = preference.getValue("user_data")
-	
-	local bg = display.newImage(group,"assets/mainmenu/bg1.png",0, 0, screenW, screenH)
-	
-	
-	--display boy or girl depending on user choice 
-	local options = {width = 32,height=32,numFrames=96}
-	local imageSheet = graphics.newImageSheet("assets/sprites/spritesheet1.png",options)
-	local character
-	if userData.gender == "boy" then
-		character= display.newImage(group,imageSheet,1)
-	elseif userData.gender == "girl" then
-		character = display.newImage(group,imageSheet,4)
-	end 
-	character:scale(2,2)
-	character.x = sW 
-	character.y = sH
 	
 	
 	--Back Button
@@ -54,16 +78,166 @@ function scene:createScene( event )
 						storyboard.gotoScene("scene.mainmenu")
 					end
 		}
-		group:insert(backButton)
+		group:insert(backButton)	
+		-- backButton.isVisible = false 
+		
+
+			
+	local controlGroup = display.newGroup()
+	group:insert(controlGroup)
+	local DpadBack = display.newImageRect(controlGroup, "assets/gamescene/Dpad.png", 200, 200)
+	DpadBack.x = 70
+	DpadBack.y = screenH - 70
+	local DpadUp = display.newRect(controlGroup, DpadBack.x - 37, DpadBack.y - 100, 75, 75)
+	local DpadDown = display.newRect(controlGroup, DpadBack.x - 37, DpadBack.y + 25, 75, 75)
+	local DpadLeft = display.newRect(controlGroup, DpadBack.x - 100, DpadBack.y - 37, 75, 75)
+	local DpadRight = display.newRect(controlGroup, DpadBack.x + 25, DpadBack.y - 37, 75, 75)
+	DpadBack:toFront()
+	DpadUp.id = "up"
+	DpadDown.id = "down"
+	DpadLeft.id = "left"
+	DpadRight.id = "right"
+	DpadBack:toFront()
+	controlGroup:setReferencePoint(display.CenterReferencePoint)
+	controlGroup:scale(.5,.5)
+
+	
+	
+	
+	group.DpadUp = DpadUp
+	group.DpadRight = DpadRight
+	group.DpadLeft = DpadLeft
+	group.DpadDown = DpadDown
+	
+	
+	local function 
+	move(event)
+		group._onJoyStickMove(event)
+	end 
+	
+	group.DpadUp:addEventListener("touch", move)
+	group.DpadDown:addEventListener("touch", move)
+	group.DpadLeft:addEventListener("touch", move)
+	group.DpadRight:addEventListener("touch", move)
+	
+	
+	
+	
+	
+		
+	---------CREATE A SPRITE------
+	local userData = preference.getValue("user_data")
+	local frameStart = userData.gender == "girl" and 1 or 4
+	local options = {width = 32,height=32,numFrames=96}
+	local spriteSheet = graphics.newImageSheet("assets/sprites/spritesheet1.png",options)
+	local sequenceData = 	{
+							{name = "walk", sheet = imageSheet, start=frameStart,count=3, time = 400,loopCount = 0},
+							}						
+	
+
+	local player = display.newSprite(spriteSheet, sequenceData)
+	group:insert(player)
+	group._player = player 
+	
+	
+	
+	-------ADD THE SPRITE TO THE MAP------
+	local setup = {
+		kind = "sprite",
+		layer = mte.getSpriteLayer(1),
+		locX = 0,
+		locY = 0,
+		levelWidth = 32,
+		levelHeight = 32,
+		}
+	mte.addSprite(player, setup)
+	mte.setCameraFocus(player)
 
 end
  
  
--- Called immediately after scene has moved onscreen:
+ 
+ 
+ 
+ 
+ 
 function scene:enterScene( event )
+
+
+	
+	
+	local pageParams = event.params or {}
 	local group = self.view
 	
+	local player = group._player
+
 	
+	
+	
+	
+
+
+	--check if there is a user location saved previously 
+	--is yes the update player and camera location 
+	local playerLocX,playerLocY=0,0
+	local saveMapData = preference.getValue("save_map_data")	
+	if pageParams.continueGame and saveMapData then 
+		playerLocX = saveMapData.playerLocX
+		playerLocY = saveMapData.playerLocY
+	end 
+	
+	mte.sendSpriteTo
+		{
+		sprite=player,
+		locX = playerLocX,
+		locY = playerLocY,
+		}
+	mte.moveCameraTo
+		{
+		sprite=player,
+		}
+	
+	
+	-------------------------------------
+	-------JOYPAD HANDLER-------------
+	------------------------------------
+	local movement
+	group._onJoyStickMove = 
+	function(event) 
+		if event.phase == "ended" or event.phase == "cancelled" then
+			movement = nil
+		elseif event.target.id then
+			movement = event.target.id
+		end
+		return true
+	end
+	
+	
+	
+	
+	
+	
+	
+	--------------------------------------------------------
+	-------this function is called everyframe-------------
+	-------------------------------------------------------
+	
+	gameLoop = function()
+		if movement then
+			--checks if joypad is pressed and moves the player 
+			local xTile, yTile = player.locX + atlas[movement][1], player.locY + atlas[movement][2]
+			player:play()
+			mte.moveSpriteTo( { sprite = player, locX = xTile, locY = yTile, time = 100, easing = "linear" } )
+			player.rotation = atlas[movement][3]
+		else
+			player:pause()
+		end
+		mte.update()
+	end 
+	Runtime:addEventListener( "enterFrame", gameLoop)
+	
+
+
 end
  
  
@@ -71,14 +245,26 @@ end
 function scene:exitScene( event )
 	local group = self.view
 	
+
+	local player = group._player
+	--WILL HAVE TO SAVE THE GAME STATE HERE
+	local saveData =
+		{
+		playerLocX = player.locX,
+		playerLocY = player.locY,
+		}
+	preference.save{save_map_data = saveData}
+
 	
+	Runtime:removeEventListener("enterFrame",gameLoop)
 end
  
  
 -- Called prior to the removal of scene's "view" (display group)
 function scene:destroyScene( event )
 	local group = self.view
-
+	mte.cleanup()
+	mte.__mapIsLoaded = false
 end
  
 
