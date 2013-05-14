@@ -10,6 +10,7 @@ local storyboard = storyboard
 local preference = preference
 
 local Window_Class = allClasses.Window_Class
+local Game_Class  = allClasses.Game_Class
 
 local screenW = allGlobals.screenW
 local screenH = allGlobals.screenH
@@ -25,31 +26,22 @@ atlas["up"]     = {  0, -1,	180 }
 atlas["down"]   = {  0,  1,	0 }
 
 
-function deepcopy(object)
-    local lookup_table = {}
-    local function
-	_copy(object)
-        if type(object) ~= "table" then
-            return object
-        elseif lookup_table[object] then
-            return lookup_table[object]
-        end
-        local new_table = {}
-        lookup_table[object] = new_table
-        for index, value in pairs(object) do
-            new_table[_copy(index)] = _copy(value)
-        end
-        return setmetatable(new_table, _copy( getmetatable(object)))
-    end
-    return _copy(object)
-end
-
 
 
 local scene = storyboard.newScene()
 
 function scene:createScene( event )
 	local group = self.view
+	local pageParams = event.params or {}
+	
+	
+	mte.__mapIsLoaded = pageParams.slot 
+	
+	local gameObject = Game_Class.getGameObject
+		{
+		slot = pageParams.slot
+		}
+	group._gameObject = gameObject
 	
 	
 	--Create Map
@@ -126,8 +118,7 @@ function scene:createScene( event )
 	
 		
 	---------CREATE A SPRITE------
-	local userData = preference.getValue("user_data")
-	local frameStart = userData.gender == "girl" and 1 or 4
+	local frameStart = gameObject._meta.gender == "girl" and 1 or 4
 	local options = {width = 32,height=32,numFrames=96}
 	local spriteSheet = graphics.newImageSheet("assets/sprites/spritesheet1.png",options)
 	local sequenceData = 	{
@@ -170,8 +161,7 @@ function scene:enterScene( event )
 	local group = self.view
 	
 	local player = group._player
-
-	
+	local gameObject = group._gameObject
 	
 	
 	
@@ -179,9 +169,9 @@ function scene:enterScene( event )
 
 	--check if there is a user location saved previously 
 	--is yes the update player and camera location 
-	local playerLocX,playerLocY=0,0
-	local saveMapData = preference.getValue("save_map_data")	
-	if pageParams.continueGame and saveMapData then 
+	local playerLocX,playerLocY=0,0	
+	if pageParams.continueGame then 
+		local saveMapData = gameObject:retrieveSavedGame()
 		playerLocX = saveMapData.playerLocX
 		playerLocY = saveMapData.playerLocY
 	end 
@@ -247,13 +237,16 @@ function scene:exitScene( event )
 	
 
 	local player = group._player
+	local gameObject = group._gameObject
+	
 	--WILL HAVE TO SAVE THE GAME STATE HERE
 	local saveData =
 		{
 		playerLocX = player.locX,
 		playerLocY = player.locY,
 		}
-	preference.save{save_map_data = saveData}
+	gameObject:saveGame(saveData)
+
 
 	
 	Runtime:removeEventListener("enterFrame",gameLoop)
@@ -264,7 +257,7 @@ end
 function scene:destroyScene( event )
 	local group = self.view
 	mte.cleanup()
-	mte.__mapIsLoaded = false
+	mte.__mapIsLoaded = nil
 end
  
 

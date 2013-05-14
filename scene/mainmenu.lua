@@ -3,12 +3,14 @@
 local allClasses = allClasses
 local allGlobals = allGlobals
 
+local timer = timer 
 local display = display 
 local widget = widget 
 local storyboard = storyboard
 local preference = preference
 
 local Window_Class = allClasses.Window_Class
+local Save_Game_Class = allClasses.Save_Game_Class
 
 
 local screenW = allGlobals.screenW
@@ -21,20 +23,21 @@ local scene = storyboard.newScene()
 function scene:createScene( event )
 	local group = self.view
 	
-	local userData = preference.getValue("user_data")
+	local listOfGames = preference.getValue("list_of_games")
 	
-	local function onChoice(event)
-		local target = event.target or {}
-		if target.id == "boy" then 
-			userData.gender = "boy"
-		elseif target.id == "girl" then 
-			userData.gender = "girl"
-		elseif target.id == "name" then 
-			if event.phase == "submitted" then 
-				userData.name = target.text
-			end 
-		end 
-		preference.save{user_data=userData}
+
+	
+	
+	local function goToGameScene(options)
+		
+		local sceneName = "scene.gamescene"
+		
+		local params = options.params
+		if (params.continueGame and params.slot ~= mte.__mapIsLoaded) or params.newGame then
+			storyboard.purgeScene(sceneName)
+		end
+		
+		storyboard.gotoScene(sceneName,options)
 	end 
 	
 	
@@ -47,11 +50,49 @@ function scene:createScene( event )
 		
 		local options = {width = 32,height=32,numFrames=96}
 		local imageSheet = graphics.newImageSheet("assets/sprites/spritesheet1.png",options)
-
+		
+		
+		local gender 
+		local name 
+		
+		local function onChoice(event)
+			local target = event.target or {}
+			if target.id == "boy" then 
+				gender = "boy"
+			elseif target.id == "girl" then 
+				gender = "girl"
+			elseif target.id == "name" then 
+				if event.phase == "submitted" then 
+					name = target.text
+				end 
+			end 
+		end 
+	
+	
+		local function 
+		onOk()
+			if not gender then 	
+				return true 	--dont close
+			end 
+			
+			local slot = Save_Game_Class.addGameToSlot
+				{
+				gender=gender,
+				name = name or "Default_Name"..math.random(100),
+				}
+				
+			timer.performWithDelay(1000,function()
+							local options = {effect="fade",params={newGame=true,slot=slot}}
+							goToGameScene(options)
+						end,1)
+			
+		end 
+	
+	
 		local boy = widget.newButton
 			{
 			sheet = imageSheet,
-			defaultFrame=1,overFrame=2,
+			defaultFrame=4,overFrame=5,
 			id = "boy",
 			left = sW-40,top=sH-30,
 			width = 40,height = 40,
@@ -62,7 +103,7 @@ function scene:createScene( event )
 		local girl = widget.newButton
 			{
 			sheet = imageSheet,
-			defaultFrame=4,overFrame=5,
+			defaultFrame=1,overFrame=2,
 			id = "girl",
 			left = sW+40,top=sH-30,
 			width = 40,height = 40,
@@ -77,6 +118,7 @@ function scene:createScene( event )
 		textField:addEventListener( "userInput", onChoice )
 		
 
+		
 			
 			
 		windowElements[#windowElements+1] = boy
@@ -87,7 +129,8 @@ function scene:createScene( event )
 		
 		local window = Window_Class.newWindow
 			{
-			windowElements = windowElements
+			windowElements = windowElements,
+			onOk = onOk
 			}
 		window:showWindow()
 	end 
@@ -98,30 +141,95 @@ function scene:createScene( event )
 	----Functions which are called on Click of Buttons--
 	------------------------------------------
 	local function onNewGame()
-		local userData = preference.getValue("user_data")
 		
-		--we are checking whether user's name and gender are already stored
-		local sceneName = "scene.gamescene"
-		if userData.name and userData.gender then
-			storyboard.purgeScene(sceneName)
-			storyboard.gotoScene(sceneName)
+		local noOfAvalableGames = Save_Game_Class.getGamesCount()
+		if noOfAvalableGames == Save_Game_Class._MAX_GAME_SLOTS then 
+			local windowElements = {}
+			
+			local txt = "Not enought slots"
+			local message =  display.newText(txt,0,100,native.systemFont,12)
+			message.x = sW 
+			message.y = sH 
+			message:setTextColor(0,0,0)
+			windowElements[#windowElements+1] = message
+			
+			local window = Window_Class.newWindow
+				{
+				windowElements = windowElements	
+				}
+			window:showWindow()
+			
 		else 
 			getUserData()
 		end 
+		
 	end 
 	
 	
-	local function onContinueGame()
-		local options =
-			{
-				effect = "fade",
-				time = 400,
-				params =
+	local function onContinueGame()	
+		local availableNames = Save_Game_Class.getGamesNames()
+		local windowElements = {}
+		
+		local slotSelected
+		local function 
+		onChoice(event)
+			slotSelected = event.target.id
+		end 
+		
+		for i=1,#availableNames do 
+			local gameSlot = widget.newButton
 				{
-				continueGame=true,
+				id = i,
+				label = availableNames[i],
+				height = 40,width=70,
+				fontSize = 12,
+				top = 20 + 50*i,
+				onRelease = onChoice
 				}
-			}
-		storyboard.gotoScene("scene.gamescene",options)
+			gameSlot.x = sW 
+			windowElements[#windowElements+1] = gameSlot
+		end 
+		
+		if #availableNames == 0 then 
+			local txt = "No games to continue"
+			local message =  display.newText(txt,0,100,native.systemFont,12)
+			message.x = sW 
+			message.y = sH 
+			message:setTextColor(0,0,0)
+			windowElements[#windowElements+1] = message
+		end 
+		
+		local function 
+		onOk()
+			if #availableNames == 0 then 
+				return false 
+			end 
+			
+			if not slotSelected then 
+				return true 
+			end 
+			
+			local options =
+				{
+					effect = "fade",
+					time = 400,
+					params =
+					{
+					slot = slotSelected,
+					continueGame=true,
+					}
+				}
+
+			goToGameScene(options)
+		end 
+		
+		
+		local window = Window_Class.newWindow
+				{
+				windowElements = windowElements,
+				onOk = onOk,
+				}
+			window:showWindow()
 	end 
 	
 	

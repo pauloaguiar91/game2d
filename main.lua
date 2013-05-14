@@ -22,20 +22,6 @@ display.setStatusBar(display.HiddenStatusBar)
 
 
 
-
---require all libraries
-storyboard = require "storyboard"
-widget = require "widget"
-json = require "json"
-preference = require "lib.preference"
-mte = require "lib.mte"
-
-_G.allClasses = 
-	{
-	Window_Class = require "class.window.basic",
-	}
-	
-
 	
 --assign all constants
 _G.allGlobals = 
@@ -46,23 +32,23 @@ _G.allGlobals =
 	sH = display.contentHeight*.5,
 	}
 
+	
 
+--require all libraries
+storyboard = require "storyboard"
+widget = require "widget"
+json = require "json"
+preference = require "lib.preference"
+mte = require "lib.mte"
 
---initialize all data which have to be saved 
---for instance, we have to save user choices like gender and name
---so on the very first running of the app, the following code will create an empty table
---after the user chooses, we can save the choices in this table 
-local userData = preference.getValue("user_data")
-if not userData then 
-	local initializationTable = {}
-	preference.save{user_data = initializationTable}
-end 
+_G.allClasses = {}
 
-local gameState = preference.getValue("game_state")
-if not gameState then 
-	local initializationTable = {}
-	preference.save{game_state = initializationTable}
-end 
+allClasses.Window_Class = require "class.window.basic"
+allClasses.Save_Game_Class = require "class.game.save_game"
+allClasses.Game_Class = require "class.game.game"
+	
+	
+
 
 
 	

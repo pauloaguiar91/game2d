@@ -30,6 +30,7 @@ function WINDOW_CLASS.newWindow(params)
 	base.x = sW 
 	base.y = sH 
 	
+	
 	local okButton = widget.newButton
 		{
 		label = "OK",
@@ -37,7 +38,12 @@ function WINDOW_CLASS.newWindow(params)
 		top = base.contentBounds.yMax - 50,
 		onRelease = 
 					function(event)
+						if params.onOk then 
+							local okIsHandled = params.onOk()
+							if okIsHandled then return end 
+						end 
 						window_object:destroyWindow()
+						
 					end 
 		}
 	okButton.x = sW
