@@ -1,4 +1,7 @@
+--mainmenu.lua
+-- menu scene for Game2D. Includes storyboard
 
+--Paulo Aguiar
 
 local allClasses = allClasses
 local allGlobals = allGlobals
@@ -24,23 +27,19 @@ function scene:createScene( event )
 	local group = self.view
 	
 	local listOfGames = preference.getValue("list_of_games")
-	
 
-	
-	
+
 	local function goToGameScene(options)
 		
-		local sceneName = "scene.gamescene"
+	local sceneName = "scene.gamescene"
 		
-		local params = options.params
-		if (params.continueGame and params.slot ~= mte.__mapIsLoaded) or params.newGame then
-			storyboard.purgeScene(sceneName)
-		end
-		
-		storyboard.gotoScene(sceneName,options)
+	local params = options.params
+	if (params.continueGame and params.slot ~= mte.__mapIsLoaded) or params.newGame then storyboard.purgeScene(sceneName)
+	
+	end
+	
+	storyboard.gotoScene(sceneName,options)
 	end 
-	
-	
 	----------------------------------------------
 	--Function to get user data (gender and name)--
 	--this function is called if the program cannot find any user data stored 
@@ -69,8 +68,7 @@ function scene:createScene( event )
 		end 
 	
 	
-		local function 
-		onOk()
+		local function onOk()
 			if not gender then 	
 				return true 	--dont close
 			end 
@@ -85,9 +83,7 @@ function scene:createScene( event )
 							local options = {effect="fade",params={newGame=true,slot=slot}}
 							goToGameScene(options)
 						end,1)
-			
 		end 
-	
 	
 		local boy = widget.newButton
 			{
@@ -291,7 +287,6 @@ function scene:createScene( event )
 			
 		local bg = display.newImage(group,"assets/mainmenu/bg1.png",0, 0, screenW, screenH)
 		
-		
 		local title = display.newText(group,"Game2D", 0, 0, native.systemFont, 75)
 		title:setTextColor(255, 255, 255)
 
@@ -332,7 +327,7 @@ function scene:createScene( event )
 			
 		local rankingsBtn = widget.newButton 
 			{
-			label = "Rankings",
+			label = "High Scores",
 			fontSize = fontSize,
 			onRelease = onRankings,
 			width=w,height=h,

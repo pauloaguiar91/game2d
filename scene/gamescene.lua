@@ -25,8 +25,9 @@ atlas["right"]  = {  1,  0,	-90 }
 atlas["up"]     = {  0, -1,	180 }
 atlas["down"]   = {  0,  1,	0 }
 
-
-
+--Collision detection comes down to reading tile properties and checking for a property you've defined for that purpose. 
+--When creating your maps in Tiled you will have to add the relevant properties to your tiles. 
+--I look for solid:true because I added a solid property to some of my tiles and set it to true. 
 
 local scene = storyboard.newScene()
 
@@ -48,16 +49,8 @@ function scene:createScene( event )
 	--and insert the map into our group 
 	mte.loadMap("assets/maps/map01")
 	group:insert(mte.getMapObj())
-	mte.goto(
-		{
-		locX=3,locY=3, 
-		blockScale = 32
-		})
+	mte.goto({locX=0,locY=0, blockScale = 30 })
 
-
-	
-	
-	
 	--Back Button
 	local backButton = widget.newButton
 		{
@@ -65,8 +58,7 @@ function scene:createScene( event )
 		label = "BACK",
 		fontSize = 11,
 		width=40,height=40,
-		onRelease = 
-					function()
+		onRelease = function()
 						storyboard.gotoScene("scene.mainmenu")
 					end
 		}
@@ -94,8 +86,6 @@ function scene:createScene( event )
 	controlGroup:scale(.5,.5)
 
 	
-	
-	
 	group.DpadUp = DpadUp
 	group.DpadRight = DpadRight
 	group.DpadLeft = DpadLeft
@@ -112,11 +102,6 @@ function scene:createScene( event )
 	group.DpadLeft:addEventListener("touch", move)
 	group.DpadRight:addEventListener("touch", move)
 	
-	
-	
-	
-	
-		
 	---------CREATE A SPRITE------
 	local frameStart = gameObject._meta.gender == "girl" and 1 or 4
 	local options = {width = 32,height=32,numFrames=96}
@@ -125,7 +110,6 @@ function scene:createScene( event )
 							{name = "walk", sheet = imageSheet, start=frameStart,count=3, time = 400,loopCount = 0},
 							}						
 	
-
 	local player = display.newSprite(spriteSheet, sequenceData)
 	group:insert(player)
 	group._player = player 
@@ -146,26 +130,12 @@ function scene:createScene( event )
 
 end
  
- 
- 
- 
- 
- 
- 
 function scene:enterScene( event )
-
-
-	
-	
 	local pageParams = event.params or {}
 	local group = self.view
 	
 	local player = group._player
 	local gameObject = group._gameObject
-	
-	
-	
-
 
 	--check if there is a user location saved previously 
 	--is yes the update player and camera location 
@@ -187,13 +157,10 @@ function scene:enterScene( event )
 		sprite=player,
 		}
 	
-	
 	-------------------------------------
 	-------JOYPAD HANDLER-------------
 	------------------------------------
-	local movement
-	group._onJoyStickMove = 
-	function(event) 
+	local movement group._onJoyStickMove = function(event) 
 		if event.phase == "ended" or event.phase == "cancelled" then
 			movement = nil
 		elseif event.target.id then
@@ -201,13 +168,6 @@ function scene:enterScene( event )
 		end
 		return true
 	end
-	
-	
-	
-	
-	
-	
-	
 	--------------------------------------------------------
 	-------this function is called everyframe-------------
 	-------------------------------------------------------
@@ -217,7 +177,7 @@ function scene:enterScene( event )
 			--checks if joypad is pressed and moves the player 
 			local xTile, yTile = player.locX + atlas[movement][1], player.locY + atlas[movement][2]
 			player:play()
-			mte.moveSpriteTo( { sprite = player, locX = xTile, locY = yTile, time = 200, easing = "linear" } )
+			mte.moveSpriteTo( { sprite = player, locX = xTile, locY = yTile, time = 300, easing = "linear" } )
 			player.rotation = atlas[movement][3]
 		else
 			player:pause()
@@ -225,11 +185,7 @@ function scene:enterScene( event )
 		mte.update()
 	end 
 	Runtime:addEventListener( "enterFrame", gameLoop)
-	
-
-
 end
- 
  
 -- Called when scene is about to move offscreen:
 function scene:exitScene( event )
@@ -246,12 +202,9 @@ function scene:exitScene( event )
 		playerLocY = player.locY,
 		}
 	gameObject:saveGame(saveData)
-
-
 	
 	Runtime:removeEventListener("enterFrame",gameLoop)
 end
- 
  
 -- Called prior to the removal of scene's "view" (display group)
 function scene:destroyScene( event )
@@ -259,7 +212,6 @@ function scene:destroyScene( event )
 	mte.cleanup()
 	mte.__mapIsLoaded = nil
 end
- 
 
 scene:addEventListener( "createScene", scene )
 scene:addEventListener( "enterScene", scene )

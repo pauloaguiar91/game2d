@@ -6,21 +6,21 @@
 -- Million Tile Engine... License bought by Paulo Aguiar on May 4, 2013.
 -- "Game2D" Property of Paulo Aguiar
 
--- Objects and listeners created should be distroyed now. Not sure if this is the best way to do it though
+--What needs to be done
 
--- Main menu map background should scroll slowly. 
+--TOP PRIORITIES--
+--Collision Detection
+--NewGame & Continue game should be scenes not windows.
+-- 
+--
 
---SATHEESH
---CREATE NEW CHARACTER MENU WITH NAME INPUT & GENDER CHOICE. YOU CAN SET THE GIRL SPRITE TO ANY ONE ON THE SPRITE SHEET.
---CREATE SAVE GAME FEATURE IN GAME.
---CREATE CONTINUE GAME MENU WITH 3 CHARACTER SLOTS. IT SHOULD HAVE THE NAME UNDER THE SPRITE AND WHEN YOU CLICK ON IT IT RETURNS A SAVED GAME
---IF TIME PERMITS(UNDER 3 HOURS)
---check out continueGame.lua for comments
+
+--MINOR--
+--Fix sprites being rotated instead of animation changed on move
+--"Story Scene" before loading first map should be created
+-- character should stay fixed to bottom of screen when walking. even through continue game.
 -----------------------------------------------------------------------------------------
 display.setStatusBar(display.HiddenStatusBar)
-
-
-
 
 	
 --assign all constants
@@ -32,9 +32,7 @@ _G.allGlobals =
 	sH = display.contentHeight*.5,
 	}
 
-	
-
---require all libraries
+--require all libraries set them global
 storyboard = require "storyboard"
 widget = require "widget"
 json = require "json"
@@ -45,15 +43,7 @@ _G.allClasses = {}
 
 allClasses.Window_Class = require "class.window.basic"
 allClasses.Save_Game_Class = require "class.game.save_game"
-allClasses.Game_Class = require "class.game.game"
-	
-	
-
-
-
-	
-	
-	
+allClasses.Game_Class = require "class.game.game"	
 	
 	
 --storyboard is the controller for difference scenes 
