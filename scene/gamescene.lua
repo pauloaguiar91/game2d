@@ -217,7 +217,7 @@ function scene:enterScene( event )
 			--checks if joypad is pressed and moves the player 
 			local xTile, yTile = player.locX + atlas[movement][1], player.locY + atlas[movement][2]
 			player:play()
-			mte.moveSpriteTo( { sprite = player, locX = xTile, locY = yTile, time = 100, easing = "linear" } )
+			mte.moveSpriteTo( { sprite = player, locX = xTile, locY = yTile, time = 200, easing = "linear" } )
 			player.rotation = atlas[movement][3]
 		else
 			player:pause()

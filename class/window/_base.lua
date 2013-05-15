@@ -26,7 +26,7 @@ function WINDOW_CLASS.newWindow(params)
 		params.group:insert(group)
 	end 
 	
-	local base = display.newRect(group,0,0,200,200)
+	local base = display.newRect(group,0,0,display.contentWidth - 25,display.contentHeight - 25)
 	base.x = sW 
 	base.y = sH 
 	
