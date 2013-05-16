@@ -17,28 +17,27 @@ local sH = allGlobals.sH
 
 local scene = storyboard.newScene()	
 
+	local function goToGameScene(options)
+		
+	local sceneName = "scene.gamescene"
+		
+	local params = options.params
+	if (params.continueGame and params.slot ~= mte.__mapIsLoaded) or params.newGame then storyboard.purgeScene(sceneName)
+	
+	end
+	
+	storyboard.gotoScene(sceneName,options)
+	end 
 	----------------------------------------------
 	--Function to get user data (gender and name)--
 	--this function is called if the program cannot find any user data stored 
 	----------------------------------------------
-local function onChoice(event)
-			local target = event.target or {}
-			if target.id == "boy" then 
-				gender = "boy"
-			elseif target.id == "girl" then 
-				gender = "girl"
-			elseif target.id == "name" then 
-				if event.phase == "submitted" then 
-					name = target.text
-				end 
-			end 
-		end 
-	
-	
-		local function onOk()
-			if not gender then 	
-				return true 	--dont close
-			end 
+ function onChoice(event)
+
+	local options = {
+		effect = "fade",
+		time = 400,
+	}
 			
 			local slot = Save_Game_Class.addGameToSlot
 				{
@@ -51,15 +50,29 @@ local function onChoice(event)
 							goToGameScene(options)
 						end,1)
 
+
+			local target = event.target or {}
+			if target.id == "boy" then 
+				gender = "boy"
+			elseif target.id == "girl" then 
+				gender = "girl"
+			elseif target.id == "name" then 
+				if event.phase == "submitted" then 
+					name = target.text
+				end 
+			end 
 	end
 function scene:createScene( event )
-		local group = self.view
+	local group = self.view
 
-		
 end
 
 	
-local function onBack()
+ function onBack()
+	local options = {
+		effect = "fade",
+		time = 400,
+	}
 
 storyboard.gotoScene("scene.mainmenu",options)
 	end
@@ -68,46 +81,34 @@ storyboard.gotoScene("scene.mainmenu",options)
 function scene:enterScene( event )
 	local group = self.view
 
-	local background = display.newImage(group ,"assets/introscene/example.png", 0, 0,display.contentWidth,display.contentHeight)
-
-			local options = {
-				effect = "fade",
-				time = 400,
-			}
-
+	--local bg = display.newRect(0,0,display.contentWidth,display.contentHeight)
 		local options = {width = 32,height=32,numFrames=96}
 		local imageSheet = graphics.newImageSheet("assets/sprites/spritesheet1.png",options)
-		
-		
 		local gender,name
-	    
-
+		
 	local back = widget.newButton
 			{
 			label = "Back",
 			onRelease = onBack,
 			width=75,height=30,
-			left = l,
+			left = 0,
 			top = 1,
 			fontSize = 12,
 			}
 		group:insert(back)
 
+		local create = widget.newButton
+		{
+			label = "Create",
+			onRelease = onChoice,
+			width=75,height=30,
+			left = 350,
+			top = display.contentHeight / 1.5,
+			fontSize = 12,
+	}
+	group:insert(create)
 
-	local noOfAvalableGames = Save_Game_Class.getGamesCount()
-		if noOfAvalableGames == Save_Game_Class._MAX_GAME_SLOTS then 
-			
-			local txt = "Not enought slots"
-			local message =  display.newText(txt,0,400,native.systemFont,12)
-			message.x = sW 
-			message.y = sH 
-			message:setTextColor(0,0,0)
-			
-		else 
-			--getUserData()
-		end 
-
-local boy = widget.newButton
+	local boy = widget.newButton
 			{
 			sheet = imageSheet,
 			defaultFrame=4,overFrame=5,
@@ -134,7 +135,19 @@ local girl = widget.newButton
 		textField.x = sW 
 		textField.id = "name"
 		textField:addEventListener( "userInput", onChoice )
-		
+
+		local noOfAvalableGames = Save_Game_Class.getGamesCount()
+		if noOfAvalableGames == Save_Game_Class._MAX_GAME_SLOTS then 
+			
+			local txt = "Not enought slots"
+			local message =  display.newText(txt,0,400,native.systemFont,12)
+			message.x = sW 
+			message.y = sH 
+			message:setTextColor(255,255,255)
+			
+		else 
+			--getUserData()
+		end 
 	
 end
  

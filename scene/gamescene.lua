@@ -51,7 +51,7 @@ function scene:createScene( event )
 	group:insert(mte.getMapObj())
 	mte.goto({locX=0,locY=0, blockScale = 30 })
 
-	--Back Button
+--Back Button
 	local backButton = widget.newButton
 		{
 		top=0,left=0,
@@ -64,7 +64,22 @@ function scene:createScene( event )
 		}
 		group:insert(backButton)	
 		-- backButton.isVisible = false 
-		
+
+	local healthBar = display.newRect(0,0,150,10)
+	healthBar:setReferencePoint(display.TopLeftReferencePoint)healthBar.x = 50;
+	healthBar.y = 10
+	healthBar:setFillColor(255,0,0)
+	group:insert(healthBar)
+
+	local energyBar = display.newRect(0,0,150,10)
+	energyBar:setReferencePoint(display.TopLeftReferencePoint)energyBar.x = 50;
+	energyBar.y = 30
+	energyBar:setFillColor(200,255,0)
+	group:insert(energyBar)
+
+	--local function onTouch(self,event) -- this can be anything, touch, collision, enterFrame, whatever you want to make your enemy depleting healthself.health = self.health - 10
+	 -- or any amount of damage you needif self.health > 0 thenhealth_bar.xScale = self.health *0.01--this is simple math. equation that will help you reduce 
+	 --codeendendenemy.touch = onTouchenemy:addEventListener("touch", enemy)
 
 			
 	local controlGroup = display.newGroup()
@@ -101,7 +116,7 @@ function scene:createScene( event )
 	group.DpadDown:addEventListener("touch", move)
 	group.DpadLeft:addEventListener("touch", move)
 	group.DpadRight:addEventListener("touch", move)
-	
+
 	---------CREATE A SPRITE------
 	local frameStart = gameObject._meta.gender == "girl" and 1 or 4
 	local options = {width = 32,height=32,numFrames=96}

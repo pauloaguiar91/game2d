@@ -27,8 +27,7 @@ function scene:createScene( event )
 	local group = self.view
 	
 	local listOfGames = preference.getValue("list_of_games")
-
-
+	
 	local function goToGameScene(options)
 		
 	local sceneName = "scene.gamescene"
@@ -41,8 +40,6 @@ function scene:createScene( event )
 	storyboard.gotoScene(sceneName,options)
 	end 
 
-	
-	
 	------------------------------------------
 	----Functions which are called on Click of Buttons--
 	------------------------------------------
@@ -56,68 +53,13 @@ function scene:createScene( event )
 	
 	
 	local function onContinueGame()	
-		local availableNames = Save_Game_Class.getGamesNames()
-		local windowElements = {}
-		
-		local slotSelected
-		local function 
-		onChoice(event)
-			slotSelected = event.target.id
-		end 
-		
-		for i=1,#availableNames do 
-			local gameSlot = widget.newButton
-				{
-				id = i,
-				label = availableNames[i],
-				height = 40,width=70,
-				fontSize = 12,
-				top = 20 + 50*i,
-				onRelease = onChoice
-				}
-			gameSlot.x = sW 
-			windowElements[#windowElements+1] = gameSlot
-		end 
-		
-		if #availableNames == 0 then 
-			local txt = "No games to continue"
-			local message =  display.newText(txt,0,100,native.systemFont,12)
-			message.x = sW 
-			message.y = sH 
-			message:setTextColor(0,0,0)
-			windowElements[#windowElements+1] = message
-		end 
-		
-		local function onOk()
-			if #availableNames == 0 then 
-				return false 
-			end 
-			
-			if not slotSelected then 
-				return true 
-			end 
-			
-			local options =
-				{
-					effect = "fade",
-					time = 400,
-					params =
-					{
-					slot = slotSelected,
-					continueGame=true,
-					}
-				}
 
-			goToGameScene(options)
-		end 
+		local options = {
+				effect = "fade",
+				time = 400,
+			}
+		storyboard.gotoScene("scene.continueScene",options)
 		
-		
-		local window = Window_Class.newWindow
-				{
-				windowElements = windowElements,
-				onOk = onOk,
-				}
-			window:showWindow()
 	end 
 	
 	
