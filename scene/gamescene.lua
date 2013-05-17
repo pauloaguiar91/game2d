@@ -1,4 +1,7 @@
+--mainmenu.lua
+-- game scene for Game2D. Includes storyboard
 
+--Paulo Aguiar
  
 local allClasses = allClasses
 local allGlobals = allGlobals
