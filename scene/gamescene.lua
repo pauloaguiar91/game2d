@@ -52,6 +52,10 @@ function scene:createScene( event )
 	mte.goto({locX=0,locY=0, blockScale = 30 })
 
 --Back Button
+	local optionsBack = {
+		effect = "fade",
+		time = 400,
+	}
 	local backButton = widget.newButton
 		{
 		top=0,left=0,
@@ -59,7 +63,7 @@ function scene:createScene( event )
 		fontSize = 11,
 		width=40,height=40,
 		onRelease = function()
-						storyboard.gotoScene("scene.mainmenu")
+						storyboard.gotoScene("scene.mainmenu",optionsBack)
 					end
 		}
 		group:insert(backButton)	

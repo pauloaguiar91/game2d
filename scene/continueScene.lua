@@ -29,14 +29,34 @@ local function goToGameScene(options)
 	end 
 function scene:createScene( event )
 	local group = self.view
-
 	local availableNames = Save_Game_Class.getGamesNames()
-		local windowElements = {}
-		
-		local slotSelected
-		local function 
-		onChoice(event)
+	local slotSelected
+local function onOk()
+	if #availableNames == 0 then 
+		return false 
+	end 
+	
+	if not slotSelected then 
+		return true 
+	end 
+			
+	local options =
+		{
+			effect = "fade",
+			time = 400,
+			params =
+			{
+			slot = slotSelected,
+			continueGame=true,
+			}
+		}
+
+			goToGameScene(options)
+		end 
+
+		local function onChoice(event)
 			slotSelected = event.target.id
+		    onOk()
 		end 
 		
 		for i=1,#availableNames do 
@@ -50,7 +70,7 @@ function scene:createScene( event )
 				onRelease = onChoice
 				}
 			gameSlot.x = sW 
-			windowElements[#windowElements+1] = gameSlot
+			group:insert(gameSlot)
 		end 
 		
 		if #availableNames == 0 then 
@@ -59,39 +79,8 @@ function scene:createScene( event )
 			message.x = sW 
 			message.y = sH 
 			message:setTextColor(0,0,0)
-			windowElements[#windowElements+1] = message
 		end 
-		
-		local function onOk()
-			if #availableNames == 0 then 
-				return false 
-			end 
-			
-			if not slotSelected then 
-				return true 
-			end 
-			
-			local options =
-				{
-					effect = "fade",
-					time = 400,
-					params =
-					{
-					slot = slotSelected,
-					continueGame=true,
-					}
-				}
 
-			goToGameScene(options)
-		end 
-		
-		
-		local window = Window_Class.newWindow
-				{
-				windowElements = windowElements,
-				onOk = onOk,
-				}
-			window:showWindow()
 
 end
 function scene:enterScene( event )
