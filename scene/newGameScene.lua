@@ -86,7 +86,7 @@ function scene:enterScene( event )
 		local imageSheet = graphics.newImageSheet("assets/sprites/spritesheet1.png",options)
 		local gender,name
 		
-	local back = widget.newButton
+	local backBttn = widget.newButton
 			{
 			label = "Back",
 			onRelease = onBack,
@@ -95,7 +95,7 @@ function scene:enterScene( event )
 			top = 1,
 			fontSize = 12,
 			}
-		group:insert(back)
+		group:insert(backBttn)
 
 		local create = widget.newButton
 		{
@@ -138,15 +138,15 @@ local girl = widget.newButton
 
 		local noOfAvalableGames = Save_Game_Class.getGamesCount()
 		if noOfAvalableGames == Save_Game_Class._MAX_GAME_SLOTS then 
-			
-			local txt = "Not enought slots"
-			local message =  display.newText(txt,0,400,native.systemFont,12)
+			girl.alpha=0
+			boy.alpha=0
+			create.alpha = 0
+			local txt = "Not enough character slots\nPlease delete a character to create a new one"
+			local message =  display.newText(txt,0,500,native.systemFont,12)
 			message.x = sW 
 			message.y = sH 
 			message:setTextColor(255,255,255)
-			
-		else 
-			--getUserData()
+			group:insert(message)
 		end 
 	
 end

@@ -16,7 +16,17 @@ local sW = allGlobals.sW
 local sH = allGlobals.sH 
 
 local scene = storyboard.newScene()	
-
+local function goToGameScene(options)
+		
+	local sceneName = "scene.gamescene"
+		
+	local params = options.params
+	if (params.continueGame and params.slot ~= mte.__mapIsLoaded) or params.newGame then storyboard.purgeScene(sceneName)
+	
+	end
+	
+	storyboard.gotoScene(sceneName,options)
+	end 
 function scene:createScene( event )
 	local group = self.view
 

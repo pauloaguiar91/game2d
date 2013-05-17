@@ -27,18 +27,6 @@ function scene:createScene( event )
 	local group = self.view
 	
 	local listOfGames = preference.getValue("list_of_games")
-	
-	local function goToGameScene(options)
-		
-	local sceneName = "scene.gamescene"
-		
-	local params = options.params
-	if (params.continueGame and params.slot ~= mte.__mapIsLoaded) or params.newGame then storyboard.purgeScene(sceneName)
-	
-	end
-	
-	storyboard.gotoScene(sceneName,options)
-	end 
 
 	------------------------------------------
 	----Functions which are called on Click of Buttons--
