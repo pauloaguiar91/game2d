@@ -31,6 +31,7 @@ end
 	storyboard.gotoScene(sceneName,options)
 end 
 
+
 function scene:createScene( event )
 --local bg = display.newImage()
 local group = self.view
@@ -75,17 +76,40 @@ for i=1,#availableNames do
 		top = 20 + 50*i,
 		onRelease = onChoice
 		}
+	local deleteBtn = widget.newButton
+		{
+		label = "Delete",
+		height = 40,width=60,
+		fontSize = 12,
+		top = 20 + 50*i,
+		left = i + 400,
+		onRelease = function(event) 
+		
+		local delWarning = display.newText("Character Deleted",0,0,native.systemFont,15)
+        delWarning:setTextColor(255,255,255)
+
+		Save_Game_Class.deleteGameFromSlot{slot=i}
+
+storyboard.purgeScene("scene.continueScene") 
+storyboard.gotoScene("scene.continueScene","flip")
+	end
+		}
+	group:insert(deleteBtn)
+
 	gameSlot.x = sW 
 	group:insert(gameSlot)
 end 
 
+
 if #availableNames == 0 then 
+
 	local txt = "No games to continue"
 	local message =  display.newText(txt,0,100,native.systemFont,12)
 	message.x = sW 
 	message.y = sH 
 	message:setTextColor(0,0,0)
 end 
+
 end
 
 function scene:enterScene( event )

@@ -37,8 +37,7 @@ local scene = storyboard.newScene()
 function scene:createScene( event )
 	local group = self.view
 	local pageParams = event.params or {}
-	
-	
+
 	mte.__mapIsLoaded = pageParams.slot 
 	
 	local gameObject = Game_Class.getGameObject
@@ -149,7 +148,6 @@ function scene:createScene( event )
 		}
 	mte.addSprite(player, setup)
 	mte.setCameraFocus(player)
-
 end
  
 function scene:enterScene( event )
@@ -187,7 +185,7 @@ function scene:enterScene( event )
 			movement = nil
 		elseif event.target.id then
 			movement = event.target.id
-		end
+		end 
 		return true
 	end
 	--------------------------------------------------------

@@ -93,7 +93,7 @@ local backBttn = widget.newButton
 {
 label = "Back",
 onRelease = onBack,
-width=75,height=30,
+width=75,height=40,
 left = 0,
 top = 1,
 fontSize = 12,
@@ -104,7 +104,7 @@ local create = widget.newButton
 {
 	label = "Create",
 	onRelease = onChoice,
-	width=75,height=30,
+	width=75,height=40,
 	left = 350,
 	top = display.contentHeight / 1.5,
 	fontSize = 12,

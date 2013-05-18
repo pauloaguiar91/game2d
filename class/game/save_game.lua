@@ -64,10 +64,10 @@ function SAVE_GAME_CLASS.getSlot()
 end 
 
 function SAVE_GAME_CLASS.deleteGameFromSlot(params)
- local listOfGames = preference.getValue("list_of_games")
- local slotIndex = SAVE_GAME_CLASS.getSlot()
+	local listOfGames = preference.getValue("list_of_games")
+	local slotIndex = SAVE_GAME_CLASS.getSlot()
  
- listOfGames[slotIndex] = nil 
+ listOfGames[slotIndex] = nil
  
  preference.save{list_of_games = listOfGames}
  
