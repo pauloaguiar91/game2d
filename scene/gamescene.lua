@@ -211,7 +211,6 @@ end
 function scene:exitScene( event )
 	local group = self.view
 	
-
 	local player = group._player
 	local gameObject = group._gameObject
 	

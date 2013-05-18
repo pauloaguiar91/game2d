@@ -92,6 +92,7 @@ for i=1,#availableNames do
 
 storyboard.purgeScene("scene.continueScene") 
 storyboard.gotoScene("scene.continueScene","flip")
+
 	end
 		}
 	group:insert(deleteBtn)
@@ -107,7 +108,7 @@ if #availableNames == 0 then
 	local message =  display.newText(txt,0,100,native.systemFont,12)
 	message.x = sW 
 	message.y = sH 
-	message:setTextColor(0,0,0)
+	message:setTextColor(255,255,255)
 end 
 
 end
