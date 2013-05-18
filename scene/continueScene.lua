@@ -22,9 +22,6 @@ local sH = allGlobals.sH
 
 local scene = storyboard.newScene()	
 
-
-
-
 function scene:createScene( event )
 --local bg = display.newImage()
 	local group = self.view
@@ -32,11 +29,34 @@ end
 
 
 function scene:enterScene( event )
+
 	local group = self.view
 	local availableNames = Save_Game_Class.getGamesNames()
 	local slotSelected
+
+	local options =
+		{
+			effect = "fade",
+			time = 400,
+			params =
+			{
+			slot = slotSelected,
+			continueGame=true,
+			}
+		}
 	
-	
+	local backBtn = widget.newButton
+				{
+				label = "Back",
+				height = 40,width=60,
+				fontSize = 12,
+				top = 0,
+				left = 0,
+				onRelease = function() 
+				storyboard.gotoScene("scene.mainmenu",options)
+				end,
+				}
+				group:insert(backBtn)
 	
 	
 	local function goToGameScene(options)
@@ -58,21 +78,11 @@ function scene:enterScene( event )
 		end 
 		if not slotSelected then 
 			return true 
-		end 
-				
-
-		local options =
-		{
-			effect = "fade",
-			time = 400,
-			params =
-			{
-			slot = slotSelected,
-			continueGame=true,
-			}
-		}
+		end
 
 		goToGameScene(options)
+
+
 	end 
 	
 
@@ -88,8 +98,6 @@ function scene:enterScene( event )
 		storyboard.purgeScene("scene.continueScene")
 		storyboard.gotoScene("scene.continueScene","flip")
 	end 
-	
-
 	
 
 	local max = Save_Game_Class._MAX_GAME_SLOTS
@@ -126,11 +134,12 @@ function scene:enterScene( event )
 	end 
 	
 	if  Save_Game_Class.getGamesCount() == 0 then
-		local txt = "No games to continue"
-		local message =  display.newText(txt,0,100,native.systemFont,12)
+		local message =  display.newText("No games to continue",0,100,native.systemFont,12)
 		message.x = sW 
 		message.y = sH 
 		message:setTextColor(255,255,255)
+		group:insert(message)
+
 	end 
 end
 

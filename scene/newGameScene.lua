@@ -22,20 +22,10 @@ local sH = allGlobals.sH
 
 local scene = storyboard.newScene()	
 
-
-	----------------------------------------------
-	--Function to get user data (gender and name)--
-	--this function is called if the program cannot find any user data stored 
-	----------------------------------------------
-
-
 function scene:createScene( event )
 	local group = self.view
 end
 	
-
-
--- Called immediately after scene has moved onscreen:
 function scene:enterScene( event )
 	local group = self.view
 
@@ -67,18 +57,6 @@ function scene:enterScene( event )
 		end 
 	end 
 	
-	
-	
-	local function goToGameScene(options)	
-		local sceneName = "scene.gamescene"			
-		local params = options.params
-		if (params.continueGame and params.slot ~= mte.__mapIsLoaded) or params.newGame then 
-			storyboard.purgeScene(sceneName)		
-		end	
-		storyboard.gotoScene(sceneName,options)
-	end 
-	
-	
 	local function onCreate()
 		if not gender then return end 
 		local options = 
@@ -87,17 +65,33 @@ function scene:enterScene( event )
 				 time = 400,
 				}
 		   
-		local slot = Save_Game_Class.addGameToSlot
+		
+		 --story step--
+         storyboard.gotoScene("scene.introGameScene",options)
+
+      	local slot = Save_Game_Class.addGameToSlot
 		 {
 		 gender=gender,
 		 name = name or "Character "..math.random(100),
 		 }
-    
-		timer.performWithDelay(1000,
-			function()
+
+		 
+	local function goToGameScene(options)	
+		local sceneName = "scene.gamescene"			
+		local params = options.params
+
+		if (params.continueGame and params.slot ~= mte.__mapIsLoaded) or params.newGame then 
+			storyboard.purgeScene(sceneName)		
+		end	
+		storyboard.gotoScene(sceneName,options)
+	end 
+
+
+		timer.performWithDelay(2000, function()
 				local options = {effect="fade",params={newGame=true,slot=slot}}
 				goToGameScene(options)
-			end,1)
+			end, 1)
+
 	end 
 	
 	
