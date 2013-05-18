@@ -22,99 +22,116 @@ local sH = allGlobals.sH
 
 local scene = storyboard.newScene()	
 
-local function goToGameScene(options)
-local sceneName = "scene.gamescene"
-local params = options.params
 
-if (params.continueGame and params.slot ~= mte.__mapIsLoaded) or params.newGame then storyboard.purgeScene(sceneName)
-end
-	storyboard.gotoScene(sceneName,options)
-end 
 
 
 function scene:createScene( event )
 --local bg = display.newImage()
-local group = self.view
-local availableNames = Save_Game_Class.getGamesNames()
-local slotSelected
-
-local function onOk()
-if #availableNames == 0 then 
-	return false 
+	local group = self.view
 end 
+
+
+function scene:enterScene( event )
+	local group = self.view
+	local availableNames = Save_Game_Class.getGamesNames()
+	local slotSelected
 	
-if not slotSelected then 
-	return true 
-end 
-			
-local options =
-{
-	effect = "fade",
-	time = 400,
-	params =
-	{
-	slot = slotSelected,
-	continueGame=true,
-	}
-}
+	
+	
+	
+	local function goToGameScene(options)
+		local sceneName = "scene.gamescene"
+		local params = options.params
 
-goToGameScene(options)
-end 
+		if (params.continueGame and params.slot ~= mte.__mapIsLoaded) or params.newGame then 
+			storyboard.purgeScene(sceneName)
+		end
+		storyboard.gotoScene(sceneName,options)
+	end 
 
-function onChoice(event)
-	slotSelected = event.target.id
-    onOk()
-end 
-		
-for i=1,#availableNames do 
-	local gameSlot = widget.newButton
+	
+	
+	local function onChoice(event)
+		slotSelected = event.target.id
+		if #availableNames == 0 then 
+			return false 
+		end 
+		if not slotSelected then 
+			return true 
+		end 
+				
+
+		local options =
 		{
-		id = i,
-		label = availableNames[i],
-		height = 40,width=110,
-		fontSize = 12,
-		top = 20 + 50*i,
-		onRelease = onChoice
+			effect = "fade",
+			time = 400,
+			params =
+			{
+			slot = slotSelected,
+			continueGame=true,
+			}
 		}
-	local deleteBtn = widget.newButton
-		{
-		label = "Delete",
-		height = 40,width=60,
-		fontSize = 12,
-		top = 20 + 50*i,
-		left = i + 400,
-		onRelease = function(event) 
+
+		goToGameScene(options)
+	end 
+	
+
+	
+	local function onDelete(event)
+		local i = event.target.id 
 		
 		local delWarning = display.newText("Character Deleted",0,0,native.systemFont,15)
-        delWarning:setTextColor(255,255,255)
+		delWarning:setTextColor(255,255,255)
 
 		Save_Game_Class.deleteGameFromSlot{slot=i}
 
-storyboard.purgeScene("scene.continueScene") 
-storyboard.gotoScene("scene.continueScene","flip")
+		storyboard.purgeScene("scene.continueScene")
+		storyboard.gotoScene("scene.continueScene","flip")
+	end 
+	
 
-	end
-		}
-	group:insert(deleteBtn)
+	
 
-	gameSlot.x = sW 
-	group:insert(gameSlot)
-end 
+	local max = Save_Game_Class._MAX_GAME_SLOTS
+	
+	for i=1,max do 
+		local gameName = availableNames[i]
+		if gameName then
+			local gameSlot = widget.newButton
+				{
+				id = i,
+				label = gameName,
+				height = 40,width=110,
+				fontSize = 12,
+				top = 20 + 50*i,
+				onRelease = onChoice
+				}
+			local deleteBtn = widget.newButton
+				{
+				id = i,
+				label = "Delete",
+				height = 40,width=60,
+				fontSize = 12,
+				top = 20 + 50*i,
+				left = i + 400,
+				onRelease = onDelete,
+				}
+			group:insert(deleteBtn)
 
-
-if #availableNames == 0 then 
-
-	local txt = "No games to continue"
-	local message =  display.newText(txt,0,100,native.systemFont,12)
-	message.x = sW 
-	message.y = sH 
-	message:setTextColor(255,255,255)
-end 
-
-end
-
-function scene:enterScene( event )
-local group = self.view
+			gameSlot.x = sW 
+			group:insert(gameSlot)
+		else 
+			--SLOT IS EMPTY. DO Whatever you want here 
+		end 
+	end 
+	
+	if  Save_Game_Class.getGamesCount() == 0 then
+		local txt = "No games to continue"
+		local message =  display.newText(txt,0,100,native.systemFont,12)
+		message.x = sW 
+		message.y = sH 
+		message:setTextColor(255,255,255)
+	end 
 end
 
 function scene:exitScene( event )

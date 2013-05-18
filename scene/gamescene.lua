@@ -209,6 +209,7 @@ end
  
 -- Called when scene is about to move offscreen:
 function scene:exitScene( event )
+	for i,v in pairs(event) do print(i,v) end 
 	local group = self.view
 	
 	local player = group._player

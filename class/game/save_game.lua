@@ -28,9 +28,8 @@ function SAVE_GAME_CLASS.getGamesNames()
 	local listOfGames = preference.getValue("list_of_games")
 	for i=1,#listOfGames do 
 		local game = listOfGames[i]
-		if game.slotFilled then
-			local name = game.meta.name 
-			final[#final+1] = name
+		if game.slotFilled then 
+			final[i] = game.meta.name 
 		end 
 	end
 	
