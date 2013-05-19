@@ -9,18 +9,17 @@
 --What needs to be done
 
 --TOP PRIORITIES--
---Collision Detection
---"Story Scene" before loading first map should be created
---Fix sprites being rotated instead of animation changed on move
---Delete saved games
---load NPC onto the screen with chat conversations
---
+--Collision Detection... There are properties in the .json map files called solid:true.. if the player trys to walk on this tile it should stop them.
+--Character should stay fixed to bottom middle of screen when walking. even through continue game.
+--Fix sprites being rotated instead of animation changed on move.. it was working fine before satheesh :/
+--for some reason my continue games are bugging again but its in the save_game class which i didnt even touch
 
 --Worry about later--
--- character should stay fixed to bottom of screen when walking. even through continue game.
--- combat system. should support swipe attacks for now 
--- Stats system (included with combat system)
--- if player clicks on map screen and they are still walking they should stop
+--"Story Scene" before loading first map should be created
+--combat system. should support swipe attacks for now 
+--Stats system (included with combat system)
+--if player clicks on map screen and they are still walking they should stop
+--load NPC onto the screen with chat conversations
 -----------------------------------------------------------------------------------------
 display.setStatusBar(display.HiddenStatusBar)
 

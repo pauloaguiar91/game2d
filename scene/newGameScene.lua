@@ -111,8 +111,8 @@ function scene:enterScene( event )
 		label = "Create",
 		onRelease = onCreate,
 		width=75,height=40,
-		left = 350,
-		top = display.contentHeight / 1.5,
+		left = 30,
+		top = sW / 1.1,
 		fontSize = 12,
 	}
 	group:insert(create)
@@ -122,7 +122,7 @@ function scene:enterScene( event )
 		sheet = imageSheet,
 		defaultFrame=4,overFrame=5,
 		id = "boy",
-		left = sW-40,top=sH-30,
+		left = 60, top=sH-30,
 		width = 40,height = 40,
 		onRelease = onChoice,
 	}
@@ -133,7 +133,7 @@ function scene:enterScene( event )
 		sheet = imageSheet,
 		defaultFrame=1,overFrame=2,
 		id = "girl",
-		left = sW+40,top=sH-30,
+		left = 0,top=sH-30,
 		width = 40,height = 40,
 		onRelease = onChoice,
 	}
@@ -144,11 +144,21 @@ function scene:enterScene( event )
 	textField.id = "name"
 	textField:addEventListener( "userInput", onChoice )
 
+	local infoBox = display.newRect(sW,5, 250,300)
+	infoBox:setFillColor(255,255,255)
+	group:insert(infoBox)
+
+	local infoTxt = display.newText("Game2D\n\n",sW,5,native.systemFont,12)
+	infoTxt:setTextColor(0,0,0)
+    group:insert(infoTxt)
+
 	local noOfAvalableGames = Save_Game_Class.getGamesCount()
 	if noOfAvalableGames == Save_Game_Class._MAX_GAME_SLOTS then 
 		girl.alpha=0
 		boy.alpha=0
 		create.alpha = 0
+		infoBox.alpha=0
+        infoTxt.alpha=0
 
 	local txt = "Not enough character slots\nPlease delete a character to create a new one"
 	local message =  display.newText(txt,0,500,native.systemFont,12)

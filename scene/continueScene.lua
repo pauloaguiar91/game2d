@@ -85,9 +85,9 @@ function scene:enterScene( event )
 
 	end 
 	
-
-	
 	local function onDelete(event)
+		--having a problem putting delWarning into the group so it deletes upon frame being closed.
+		--local group = self.view // since we need a local group ?
 		local i = event.target.id 
 		
 		local delWarning = display.newText("Character Deleted",0,0,native.systemFont,15)
@@ -97,8 +97,10 @@ function scene:enterScene( event )
 
 		storyboard.purgeScene("scene.continueScene")
 		storyboard.gotoScene("scene.continueScene","flip")
+
+		--group:insert(delWarning)
 	end 
-	
+
 
 	local max = Save_Game_Class._MAX_GAME_SLOTS
 	
@@ -128,17 +130,19 @@ function scene:enterScene( event )
 
 			gameSlot.x = sW 
 			group:insert(gameSlot)
-		else 
-			--SLOT IS EMPTY. DO Whatever you want here 
-		end 
-	end 
-	
-	if  Save_Game_Class.getGamesCount() == 0 then
+
+--bug:if you see this message and then come back into the scene even with a new character this message shows up.
+		else if  Save_Game_Class.getGamesCount() == 0 then
 		local message =  display.newText("No games to continue",0,100,native.systemFont,12)
 		message.x = sW 
 		message.y = sH 
 		message:setTextColor(255,255,255)
 		group:insert(message)
+		end 
+	end 
+	
+	
+
 
 	end 
 end
