@@ -124,12 +124,36 @@ function scene:createScene( event )
 	group.DpadRight:addEventListener("touch", move)
 
 	---------CREATE A SPRITE------
-	local frameStart = gameObject._meta.gender == "girl" and 1 or 4
+	local allSpriteData = 
+		{
+		["boy"] =	{
+					["down"] = 4,
+					["left"] = 16,
+					["right"] = 28,
+					["up"] = 42,
+					},
+					
+		["girl"] = 	{
+					["down"] = 1,
+					["left"] = 13,
+					["right"] = 25,
+					["up"] = 37,
+					},
+		}
+	local spriteData = allSpriteData[gameObject._meta.gender]
+		
+		
+	local frameStart = spriteData["down"]
 	local options = {width = 32,height=32,numFrames=96}
 	local spriteSheet = graphics.newImageSheet("assets/sprites/spritesheet1.png",options)
-	local sequenceData = 	{
-							{name = "walk", sheet = imageSheet, start=frameStart,count=3, time = 400,loopCount = 0},
-							}						
+								
+	local sequenceData = 
+							{
+							{name = "up", sheet = imageSheet, count=3,start = spriteData["up"], time = 400, loopCount = 0},
+							{name = "down", sheet = imageSheet,count=3, start = spriteData["down"], time = 400, loopCount = 0},
+							{name = "left", sheet = imageSheet,count=3, start = spriteData["left"], time = 400, loopCount = 0},
+							{name = "right", sheet = imageSheet,count=3, start = spriteData["right"], time = 400, loopCount = 0}
+							}
 	
 	local player = display.newSprite(spriteSheet, sequenceData)
 	group:insert(player)
@@ -172,9 +196,12 @@ function scene:enterScene( event )
 		locX = playerLocX,
 		locY = playerLocY,
 		}
+
 	mte.moveCameraTo
 		{
-		sprite=player,
+		-- sprite=player,
+		levelPosX = player.levelPosX,
+		levelPosY = player.levelPosY - 170,
 		}
 	
 	-------------------------------------
@@ -188,6 +215,30 @@ function scene:enterScene( event )
 		end 
 		return true
 	end
+	
+	
+	
+	----------------------------
+	--DETECT OBSTACLES -------
+	----------------------------
+	local function obstacle(level, locX, locY)
+		
+		local detect = mte.getTileProperties({level = level, locX = locX, locY = locY})
+		
+		for i = 1, #detect, 1 do
+			if detect[i].properties then
+				if detect[i].properties.solid  then
+					detect = "stop"
+					return detect
+				end
+			end
+		end
+	end
+	
+	
+	
+	
+	
 	--------------------------------------------------------
 	-------this function is called everyframe-------------
 	-------------------------------------------------------
@@ -196,9 +247,24 @@ function scene:enterScene( event )
 		if movement then
 			--checks if joypad is pressed and moves the player 
 			local xTile, yTile = player.locX + atlas[movement][1], player.locY + atlas[movement][2]
-			player:play()
-			mte.moveSpriteTo( { sprite = player, locX = xTile, locY = yTile, time = 300, easing = "linear" } )
-			player.rotation = atlas[movement][3]
+			
+			if player.sequence ~= movement then
+				player:setSequence(movement)
+				player:play()
+			end 
+				
+			local result = obstacle( player.level, xTile, yTile )
+
+			if result then 	
+				player:pause()
+			else 
+				if not player.isPlaying then 
+					player:play()
+				end 
+				mte.moveSpriteTo( { sprite = player, locX = xTile, locY = yTile, time = 300, easing = "linear" } )
+			end
+			
+			
 		else
 			player:pause()
 		end

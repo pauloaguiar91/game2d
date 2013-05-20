@@ -10,9 +10,6 @@
 
 --TOP PRIORITIES--
 --Collision Detection... There are properties in the .json map files called solid:true.. if the player trys to walk on this tile it should stop them.
---Character should stay fixed to bottom middle of screen when walking. even through continue game.
---Fix sprites being rotated instead of animation changed on move.. it was working fine before satheesh :/
---for some reason my continue games are bugging again but its in the save_game class which i didnt even touch
 
 --Worry about later--
 --"Story Scene" before loading first map should be created

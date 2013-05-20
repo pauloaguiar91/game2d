@@ -34,17 +34,6 @@ function scene:enterScene( event )
 	local availableNames = Save_Game_Class.getGamesNames()
 	local slotSelected
 
-	local options =
-		{
-			effect = "fade",
-			time = 400,
-			params =
-			{
-			slot = slotSelected,
-			continueGame=true,
-			}
-		}
-	
 	local backBtn = widget.newButton
 				{
 				label = "Back",
@@ -79,7 +68,16 @@ function scene:enterScene( event )
 		if not slotSelected then 
 			return true 
 		end
-
+	local options =
+		{
+			effect = "fade",
+			time = 400,
+			params =
+			{
+			slot = slotSelected,
+			continueGame=true,
+			}
+		}
 		goToGameScene(options)
 
 
@@ -132,13 +130,16 @@ function scene:enterScene( event )
 			group:insert(gameSlot)
 
 --bug:if you see this message and then come back into the scene even with a new character this message shows up.
-		else if  Save_Game_Class.getGamesCount() == 0 then
+		else
+
+
+		end 
+		 if  Save_Game_Class.getGamesCount() == 0 then
 		local message =  display.newText("No games to continue",0,100,native.systemFont,12)
 		message.x = sW 
 		message.y = sH 
 		message:setTextColor(255,255,255)
 		group:insert(message)
-		end 
 	end 
 	
 	
