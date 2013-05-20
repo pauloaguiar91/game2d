@@ -90,13 +90,23 @@ function scene:createScene( event )
 			
 	local controlGroup = display.newGroup()
 	group:insert(controlGroup)
-	local DpadBack = display.newImageRect(controlGroup, "assets/gamescene/Dpad.png", 200, 200)
+	local DpadBack = display.newImageRect(controlGroup, "assets/gamescene/1.gif", 200, 200)
 	DpadBack.x = 70
 	DpadBack.y = screenH - 70
-	local DpadUp = display.newRect(controlGroup, DpadBack.x - 37, DpadBack.y - 100, 75, 75)
-	local DpadDown = display.newRect(controlGroup, DpadBack.x - 37, DpadBack.y + 25, 75, 75)
-	local DpadLeft = display.newRect(controlGroup, DpadBack.x - 100, DpadBack.y - 37, 75, 75)
-	local DpadRight = display.newRect(controlGroup, DpadBack.x + 25, DpadBack.y - 37, 75, 75)
+
+	local DpadUp = display.newRect(controlGroup, DpadBack.x - 35, DpadBack.y - 125, 65, 85)
+	DpadUp:setFillColor(0,0,0)
+	DpadUp.alpha = 0.5
+	local DpadDown = display.newRect(controlGroup, DpadBack.x - 35, DpadBack.y + 20, 65, 85)
+	DpadDown:setFillColor(0,0,0)
+	DpadDown.alpha = 0.5
+	local DpadLeft = display.newRect(controlGroup, DpadBack.x - 120, DpadBack.y - 42, 85, 65)
+	DpadLeft:setFillColor(0,0,0)
+	DpadLeft.alpha = 0.5
+	local DpadRight = display.newRect(controlGroup, DpadBack.x + 29, DpadBack.y - 40, 85, 65)
+	DpadRight:setFillColor(0,0,0)
+	DpadRight.alpha = 0.5
+
 	DpadBack:toFront()
 	DpadUp.id = "up"
 	DpadDown.id = "down"
@@ -130,7 +140,7 @@ function scene:createScene( event )
 					["down"] = 4,
 					["left"] = 16,
 					["right"] = 28,
-					["up"] = 42,
+					["up"] = 40,
 					},
 					
 		["girl"] = 	{
@@ -146,22 +156,41 @@ function scene:createScene( event )
 	local frameStart = spriteData["down"]
 	local options = {width = 32,height=32,numFrames=96}
 	local spriteSheet = graphics.newImageSheet("assets/sprites/spritesheet1.png",options)
-								
-	local sequenceData = 
-							{
-							{name = "up", sheet = imageSheet, count=3,start = spriteData["up"], time = 400, loopCount = 0},
-							{name = "down", sheet = imageSheet,count=3, start = spriteData["down"], time = 400, loopCount = 0},
-							{name = "left", sheet = imageSheet,count=3, start = spriteData["left"], time = 400, loopCount = 0},
-							{name = "right", sheet = imageSheet,count=3, start = spriteData["right"], time = 400, loopCount = 0}
-							}
 	
+	--player sprite						
+	local sequenceData = {
+
+						{name = "up", sheet = imageSheet, count=3,start = spriteData["up"], time = 400, loopCount = 0},
+						{name = "down", sheet = imageSheet,count=3, start = spriteData["down"], time = 400, loopCount = 0},
+						{name = "left", sheet = imageSheet,count=3, start = spriteData["left"], time = 400, loopCount = 0},
+						{name = "right", sheet = imageSheet,count=3, start = spriteData["right"], time = 400, loopCount = 0}
+
+						}
+	--npc sprite 1
+	local seq = {
+
+				{name = "down", sheet = imageSheet, count=3,start = 10, time = 400, loopCount = 0}
+
+				}
+	----ADD NPC SPRITE TO THE SCREEN----
+	local npc1 = display.newSprite(spriteSheet, seq)
+	group:insert(npc1)
+
+	local setup_ = {
+		kind = "sprite",
+		layer = mte.getSpriteLayer(1),
+		locX = 5,
+		locY = 4,
+		levelWidth = 32,
+		levelHeight = 32,
+		}
+	mte.addSprite(npc1, setup_)
+	
+	-------ADD THE PLAYER SPRITE TO THE MAP------
 	local player = display.newSprite(spriteSheet, sequenceData)
 	group:insert(player)
 	group._player = player 
 	
-	
-	
-	-------ADD THE SPRITE TO THE MAP------
 	local setup = {
 		kind = "sprite",
 		layer = mte.getSpriteLayer(1),
@@ -183,7 +212,7 @@ function scene:enterScene( event )
 
 	--check if there is a user location saved previously 
 	--is yes the update player and camera location 
-	local playerLocX,playerLocY=0,0	
+	local playerLocX,playerLocY=4,11	
 	if pageParams.continueGame then 
 		local saveMapData = gameObject:retrieveSavedGame()
 		playerLocX = saveMapData.playerLocX
@@ -201,7 +230,7 @@ function scene:enterScene( event )
 		{
 		-- sprite=player,
 		levelPosX = player.levelPosX,
-		levelPosY = player.levelPosY - 170,
+		levelPosY = player.levelPosY - 130,
 		}
 	
 	-------------------------------------
@@ -234,10 +263,6 @@ function scene:enterScene( event )
 			end
 		end
 	end
-	
-	
-	
-	
 	
 	--------------------------------------------------------
 	-------this function is called everyframe-------------

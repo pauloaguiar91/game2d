@@ -25,6 +25,23 @@ local scene = storyboard.newScene()
 function scene:createScene( event )
 --local bg = display.newImage()
 	local group = self.view
+
+		local message =  display.newText("No games to continue",0,100,native.systemFont,12)
+		message.x = sW 
+		message.y = sH 
+		message.alpha = 0
+		message:setTextColor(255,255,255)
+		group:insert(message)
+
+		if  Save_Game_Class.getGamesCount() == 0 then
+			message.alpha = 1
+
+
+		else if Save_Game_Class.getGamesCount() >= 1 then
+				message.alpha = 0
+	end
+
+
 end 
 
 
@@ -33,6 +50,12 @@ function scene:enterScene( event )
 	local group = self.view
 	local availableNames = Save_Game_Class.getGamesNames()
 	local slotSelected
+
+		local options =
+		{
+			effect = "fade",
+			time = 400
+		}
 
 	local backBtn = widget.newButton
 				{
@@ -82,29 +105,13 @@ function scene:enterScene( event )
 
 
 	end 
-	
-	local function onDelete(event)
-		--having a problem putting delWarning into the group so it deletes upon frame being closed.
-		--local group = self.view // since we need a local group ?
-		local i = event.target.id 
-		
-		local delWarning = display.newText("Character Deleted",0,0,native.systemFont,15)
-		delWarning:setTextColor(255,255,255)
-
-		Save_Game_Class.deleteGameFromSlot{slot=i}
-
-		storyboard.purgeScene("scene.continueScene")
-		storyboard.gotoScene("scene.continueScene","flip")
-
-		--group:insert(delWarning)
-	end 
-
 
 	local max = Save_Game_Class._MAX_GAME_SLOTS
 	
 	for i=1,max do 
 		local gameName = availableNames[i]
 		if gameName then
+
 			local gameSlot = widget.newButton
 				{
 				id = i,
@@ -122,7 +129,12 @@ function scene:enterScene( event )
 				fontSize = 12,
 				top = 20 + 50*i,
 				left = i + 400,
-				onRelease = onDelete,
+				onRelease = function()						
+							Save_Game_Class.deleteGameFromSlot{slot=i}
+
+							storyboard.purgeScene("scene.continueScene")
+							storyboard.gotoScene("scene.continueScene",options)
+				end,
 				}
 			group:insert(deleteBtn)
 
@@ -134,12 +146,7 @@ function scene:enterScene( event )
 
 
 		end 
-		 if  Save_Game_Class.getGamesCount() == 0 then
-		local message =  display.newText("No games to continue",0,100,native.systemFont,12)
-		message.x = sW 
-		message.y = sH 
-		message:setTextColor(255,255,255)
-		group:insert(message)
+
 	end 
 	
 	

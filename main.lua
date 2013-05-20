@@ -9,14 +9,14 @@
 --What needs to be done
 
 --TOP PRIORITIES--
---Collision Detection... There are properties in the .json map files called solid:true.. if the player trys to walk on this tile it should stop them.
-
---Worry about later--
 --"Story Scene" before loading first map should be created
 --combat system. should support swipe attacks for now 
 --Stats system (included with combat system)
 --if player clicks on map screen and they are still walking they should stop
 --load NPC onto the screen with chat conversations
+
+--Worry about later--
+
 -----------------------------------------------------------------------------------------
 display.setStatusBar(display.HiddenStatusBar)
 
