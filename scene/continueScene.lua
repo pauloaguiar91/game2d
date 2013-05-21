@@ -40,8 +40,6 @@ function scene:createScene( event )
 		else if Save_Game_Class.getGamesCount() >= 1 then
 				message.alpha = 0
 	end
-
-
 end 
 
 

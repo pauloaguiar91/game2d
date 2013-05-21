@@ -148,7 +148,7 @@ function scene:enterScene( event )
 	infoBox:setFillColor(255,255,255)
 	group:insert(infoBox)
 
-	local infoTxt = display.newText("Game2D\n\nThe game saves upon close",sW,5,native.systemFont,12)
+	local infoTxt = display.newText("Game2D\n\nThis game has an autosave feature\n\nStory Info will be here",sW,5,native.systemFont,12)
 	infoTxt:setTextColor(0,0,0)
     group:insert(infoTxt)
 
