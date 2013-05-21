@@ -28,10 +28,6 @@ atlas["right"]  = {  1,  0,	-90 }
 atlas["up"]     = {  0, -1,	180 }
 atlas["down"]   = {  0,  1,	0 }
 
---Collision detection comes down to reading tile properties and checking for a property you've defined for that purpose. 
---When creating your maps in Tiled you will have to add the relevant properties to your tiles. 
---I look for solid:true because I added a solid property to some of my tiles and set it to true. 
-
 local scene = storyboard.newScene()
 
 function scene:createScene( event )
@@ -51,7 +47,7 @@ function scene:createScene( event )
 	--and insert the map into our group 
 	mte.loadMap("assets/maps/map01")
 	group:insert(mte.getMapObj())
-	mte.goto({locX=0,locY=0, blockScale = 30 })
+	mte.goto({locX=5,locY=0, blockScale = 30 })
 
 --Back Button
 	local optionsBack = {
@@ -176,6 +172,24 @@ function scene:createScene( event )
 	local npc1 = display.newSprite(spriteSheet, seq)
 	group:insert(npc1)
 
+--dialog box shows up in the correct spot but needs to stick to the map no the camera.
+--dialog box and text should be removed on click
+--needs to be put in group as well
+	local function npcDialog(event)
+		local text = " Welcome to Game2D!!"
+		local dialogBox = display.newRoundedRect(event.x + 9, event.y -66, 200,50,4)
+	    local textShown = display.newText(text,event.x + 9, event.y -66,native.systemFont,12)
+	    textShown:setTextColor(0,0,0)
+
+		dialogBox:setFillColor(255,255,255)
+		dialogBox.alpha = 0.5
+
+		dialogBox:addEventListener("touch", textShown:removeSelf())
+	end
+
+npc1:addEventListener("touch", npcDialog)
+	
+
 	local setup_ = {
 		kind = "sprite",
 		layer = mte.getSpriteLayer(1),
@@ -212,7 +226,7 @@ function scene:enterScene( event )
 
 	--check if there is a user location saved previously 
 	--is yes the update player and camera location 
-	local playerLocX,playerLocY=4,11	
+	local playerLocX,playerLocY=4,8	
 	if pageParams.continueGame then 
 		local saveMapData = gameObject:retrieveSavedGame()
 		playerLocX = saveMapData.playerLocX
