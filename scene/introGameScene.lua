@@ -22,14 +22,13 @@ local sH = allGlobals.sH
 
 local scene = storyboard.newScene()	
 
-function scene:createScene( event )
+function scene:createScene(event)
 	local group = self.view
-	local txtBox = display.newRect(10,sH / 2, sW * 1.8,sH)
+	local txtBox = display.newRect(10,sH / 2, sW * 1.8,sW)
 	txtBox:setFillColor(255, 255,255)
 
 	local txt = {}
-	txt[1] = "Welcome to Game2D!"
-	txt[2] = "rawr"
+	txt[1] = "Welcome to Game2D! Il put some story stuff about mystic weapons here later"
 
 	local displayTxt = display.newText(txt[1],10,sH / 2,native.systemFont,12)
 	displayTxt:setTextColor(0,0,0)
@@ -38,26 +37,23 @@ function scene:createScene( event )
 end
 
 	
-function scene:enterScene( event )
+function scene:enterScene(event)
 	local group = self.view
-
-
-
 end
 
 -- Called when scene is about to move offscreen:
-function scene:exitScene( event )
+function scene:exitScene(event)
 	local group = self.view
 end
  
 -- Called prior to the removal of scene's "view" (display group)
-function scene:destroyScene( event )
+function scene:destroyScene(event)
 	local group = self.view
 
 end
 
-scene:addEventListener( "createScene", scene )
-scene:addEventListener( "enterScene", scene )
-scene:addEventListener( "exitScene", scene )
-scene:addEventListener( "destroyScene", scene )
+scene:addEventListener("createScene", scene)
+scene:addEventListener("enterScene", scene)
+scene:addEventListener("exitScene", scene)
+scene:addEventListener("destroyScene", scene)
 return scene

@@ -43,13 +43,11 @@ function scene:createScene( event )
 	group._gameObject = gameObject
 	
 	
-	--Create Map
-	--and insert the map into our group 
+	--Create and insert the map into our group 
 	mte.loadMap("assets/maps/map01")
 	group:insert(mte.getMapObj())
 	mte.goto({locX=5,locY=0, blockScale = 30 })
 
---Back Button
 	local optionsBack = {
 		effect = "fade",
 		time = 400,
@@ -65,7 +63,6 @@ function scene:createScene( event )
 					end
 		}
 		group:insert(backButton)	
-		-- backButton.isVisible = false 
 
 	local healthBar = display.newRect(0,0,150,10)
 	healthBar:setReferencePoint(display.TopLeftReferencePoint)healthBar.x = 50;
@@ -83,7 +80,9 @@ function scene:createScene( event )
 	 -- or any amount of damage you needif self.health > 0 thenhealth_bar.xScale = self.health *0.01--this is simple math. equation that will help you reduce 
 	 --codeendendenemy.touch = onTouchenemy:addEventListener("touch", enemy)
 
-			
+	 --              
+	 -- DPAD SETUP
+	 --	
 	local controlGroup = display.newGroup()
 	group:insert(controlGroup)
 	local DpadBack = display.newImageRect(controlGroup, "assets/gamescene/1.gif", 200, 200)
@@ -119,8 +118,7 @@ function scene:createScene( event )
 	group.DpadDown = DpadDown
 	
 	
-	local function 
-	move(event)
+	local function move(event)
 		group._onJoyStickMove(event)
 	end 
 	
@@ -173,18 +171,21 @@ function scene:createScene( event )
 	group:insert(npc1)
 
 --dialog box shows up in the correct spot but needs to stick to the map no the camera.
---dialog box and text should be removed on click
 --needs to be put in group as well
 	local function npcDialog(event)
-		local text = " Welcome to Game2D!!"
 		local dialogBox = display.newRoundedRect(event.x + 9, event.y -66, 200,50,4)
+		dialogBox:setFillColor(255,255,255)
+		dialogBox.alpha = 1
+
+		if dialogBox.alpha > 0 then
+		dialogBox.alpha = 0.5
+
+		local text = " Welcome to Game2D!!"
 	    local textShown = display.newText(text,event.x + 9, event.y -66,native.systemFont,12)
 	    textShown:setTextColor(0,0,0)
 
-		dialogBox:setFillColor(255,255,255)
-		dialogBox.alpha = 0.5
-
-		dialogBox:addEventListener("touch", textShown:removeSelf())
+		timer.performWithDelay(1200, function() dialogBox:removeSelf() textShown:removeSelf() end)
+		end
 	end
 
 npc1:addEventListener("touch", npcDialog)

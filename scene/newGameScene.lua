@@ -87,7 +87,7 @@ function scene:enterScene( event )
 	end 
 
 
-		timer.performWithDelay(2000, function()
+		timer.performWithDelay(6000, function()
 				local options = {effect="fade",params={newGame=true,slot=slot}}
 				goToGameScene(options)
 			end, 1)
@@ -148,7 +148,7 @@ function scene:enterScene( event )
 	infoBox:setFillColor(255,255,255)
 	group:insert(infoBox)
 
-	local infoTxt = display.newText("Game2D\n\nThis game has an autosave feature\n\nStory Info will be here",sW,5,native.systemFont,12)
+	local infoTxt = display.newText("Game2D\n\nThis game has an autosave feature\n\nPlease select your character name, gender\nand click create to begin your journey into \nthe world\n\n\n\nBe careful..... <3",sW,5,native.systemFont,12)
 	infoTxt:setTextColor(0,0,0)
     group:insert(infoTxt)
 
