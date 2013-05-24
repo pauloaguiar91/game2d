@@ -89,18 +89,29 @@ function scene:createScene( event )
 	DpadBack.x = 70
 	DpadBack.y = screenH - 70
 
-	local DpadUp = display.newRect(controlGroup, DpadBack.x - 35, DpadBack.y - 125, 65, 85)
+	local DpadUp = display.newRoundedRect(controlGroup, DpadBack.x - 35, DpadBack.y - 125, 65, 85,4)
 	DpadUp:setFillColor(0,0,0)
 	DpadUp.alpha = 0.5
-	local DpadDown = display.newRect(controlGroup, DpadBack.x - 35, DpadBack.y + 20, 65, 85)
+	DpadUp.strokeWidth = 3
+    DpadUp:setStrokeColor(255,255,255)
+
+	local DpadDown = display.newRoundedRect(controlGroup, DpadBack.x - 35, DpadBack.y + 17, 65, 85,4)
 	DpadDown:setFillColor(0,0,0)
 	DpadDown.alpha = 0.5
-	local DpadLeft = display.newRect(controlGroup, DpadBack.x - 120, DpadBack.y - 42, 85, 65)
+	DpadDown.strokeWidth = 3
+    DpadDown:setStrokeColor(255,255,255)
+
+	local DpadLeft = display.newRoundedRect(controlGroup, DpadBack.x - 121, DpadBack.y - 39, 85, 55,4)
 	DpadLeft:setFillColor(0,0,0)
 	DpadLeft.alpha = 0.5
-	local DpadRight = display.newRect(controlGroup, DpadBack.x + 29, DpadBack.y - 40, 85, 65)
+	DpadLeft.strokeWidth = 3
+    DpadLeft:setStrokeColor(255,255,255)
+
+	local DpadRight = display.newRoundedRect(controlGroup, DpadBack.x + 31, DpadBack.y - 39, 85, 55,4)
 	DpadRight:setFillColor(0,0,0)
 	DpadRight.alpha = 0.5
+	DpadRight.strokeWidth = 3
+    DpadRight:setStrokeColor(255,255,255)
 
 	DpadBack:toFront()
 	DpadUp.id = "up"
@@ -245,7 +256,7 @@ function scene:enterScene( event )
 		{
 		-- sprite=player,
 		levelPosX = player.levelPosX,
-		levelPosY = player.levelPosY - 130,
+		levelPosY = player.levelPosY,
 		}
 	
 	-------------------------------------
