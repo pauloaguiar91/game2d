@@ -44,4 +44,4 @@ allClasses.Game_Class = require "class.game.game"
 
 --start	
 storyboard.gotoScene("scene.introscene",{effect="crossFade",time=500,})
-if true then return end 
+

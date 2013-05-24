@@ -11,7 +11,6 @@ local sH = screenH*.5
  --THIS IS JUST A BASE CLASS USED FOR INHERITANCE
 
 local WINDOW_CLASS = {}
-WINDOW_CLASS.__index = WINDOW_CLASS
 
 
 
@@ -19,7 +18,7 @@ WINDOW_CLASS.__index = WINDOW_CLASS
 function WINDOW_CLASS.newWindow(params)
 	local params = params or {}
 	
-	local window_object = setmetatable({},WINDOW_CLASS)
+	local window_object = setmetatable({},{__index=WINDOW_CLASS})
 	
 	local group = display.newGroup()
 	if params.group then 
